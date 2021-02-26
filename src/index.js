@@ -22,7 +22,7 @@ app.get('/', (request, response) => {
 
 function calculaImc(peso, altura){
 
-return peso / (altura**2);
+return peso / (altura*altura);
 
 }
 
@@ -61,14 +61,14 @@ app.post('/', (request, response) => {
 
     
     
-    const { name, email, cpf, altura, peso } = request.body;
+    const { name, cpf, altura, peso } = request.body;
     
     //destruturação
     let imc = calculaImc(peso,altura);
     let classificacao = classificaIMC(imc);
     
     
-    const newPaciente = { id: uuid(), name, email, cpf, altura, peso , imc, classificacao};
+    const newPaciente = { id: uuid(), name, cpf, altura, peso , imc, classificacao};
     repositories.push({ newPaciente });
     return response.json({ newPaciente });
 
@@ -81,7 +81,7 @@ app.put('/:id', (request, response) => {
     //route params guid
 
     const { id } = request.params;
-    const { name, email, cpf, altura, peso } = request.body;
+    const { name, cpf, altura, peso } = request.body;
     const PacienteProcurado = repositories.findIndex(pacienteIndex => pacienteIndex.id == id);
 
 
@@ -96,7 +96,7 @@ app.put('/:id', (request, response) => {
 
     }
 
-    const newPaciente = { id, name, email, cpf, altura, peso };
+    const newPaciente = { id, name, cpf, altura, peso };
     repositories[PacienteProcurado] = newPaciente;
     return response.json(newPaciente);
 
