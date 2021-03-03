@@ -82,7 +82,7 @@ app.put('/:id', (request, response) => {
 
     const { id } = request.params;
     const { name, cpf, altura, peso } = request.body;
-    const PacienteProcurado = repositories.findIndex(pacienteIndex => pacienteIndex.id == id);
+    const PacienteProcurado = repositories.findIndex(pacienteIndex => pacienteIndex.newPaciente.id == id);
 
 
     console.log(id);
@@ -106,7 +106,7 @@ app.delete('/:id', (request, response) => {
 
     const { id } = request.params;
 
-    const PacienteProcurado = repositories.findIndex(pacienteIndex => pacienteIndex.id == id);
+    const PacienteProcurado = repositories.findIndex(pacienteIndex => pacienteIndex.newPaciente.id == id);
     if (PacienteProcurado < 0) {
 
         return response.status(404).json({ "ERROR": `Paciente ${id} não encontrado` });

@@ -55,7 +55,7 @@ const { validate : isUuid } = require("uuid");
                         "name" : "Daniel",
                          cpf : 123,
                          peso : 80,
-                        altura : 1.80,
+                        altura : 1.80
                     })
                     .expect(200);
                 expect(isUuid(response.body.newPaciente.id)).toBe(true);
