@@ -35,7 +35,7 @@ jobs:
       - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
         with:
           heroku_email: ${{secrets.HEROKU_EMAIL }}
-          heroku_api_key: ${{secrets.HEROKU_AP I_KEY}}
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
         
           heroku_app_name: "aulah1"
           procfile: "web: npm start"
