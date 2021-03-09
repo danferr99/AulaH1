@@ -2,9 +2,11 @@
 const express = require("express");
 const { uuid } = require('uuidv4');
 const { validate : isUuid } = require("uuid");
+const cors = require('cors');
 //preparar para usar express
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 const repositories = [];
 
