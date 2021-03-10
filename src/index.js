@@ -124,6 +124,6 @@ app.delete('/:id', (request, response) => {
 
 
 
-module.exports = app.listen(3334, () => {
+module.exports = app.listen(process.env.PORT || 3334, () => {
     console.log("Server running");
 });
