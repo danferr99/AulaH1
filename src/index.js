@@ -1,25 +1,36 @@
-//importando pacote express
+//importando pacotes
 const express = require("express");
 const { uuid } = require('uuidv4');
 const { validate : isUuid } = require("uuid");
 const cors = require('cors');
-//preparar para usar express
+const mongoose = require('mongoose');
+const PacienteRepositorio = require('./models/Paciente');
+
+
+
+//preparar para usar express e etc...
 const app = express();
 app.use(express.json());
 app.use(cors());
 
 const repositories = [];
 
+
+mongoose.connect('', {
+useNewUrlParser : true,
+useUnifiedTopology : true
+
+});
+
 // 1 parametro o nome da rota
 // 2 parametro ação qeu vou fazer função  
 // java script arrow function
 // (parametros) => {codigos programa fazer}
 
-app.get('/', (request, response) => {
+app.get('/',async (request, response) => {
     //codigo funcao
-
-    return response.send(repositories);
-
+    const retornoPaciente = await PacienteRepositorio.find();
+    return response.json(retornoPaciente);
 });
 
 function calculaImc(peso, altura){
@@ -28,7 +39,7 @@ return peso / (altura*altura);
 
 }
 
-function classificaIMC (vlrIMC){
+function classificaIMC(vlrIMC){
 
     if (vlrIMC < 18.5)
 
@@ -59,20 +70,25 @@ return "Obesidade Severa Grau - 3";
 
 
 
-app.post('/', (request, response) => {
+app.post('/', async (request, response) => {
 
     
     
-    const { name, cpf, altura, peso } = request.body;
-    
+    const { nome, cpf, altura, peso } = request.body;
+    console.log(request.body);
     //destruturação
     let imc = calculaImc(peso,altura);
     let classificacao = classificaIMC(imc);
     
+    console.log(imc);
+    console.log(classificacao);
+    const retornoPaciente = await PacienteRepositorio.create({
+        id: uuid(), nome, cpf, altura, peso , imc, classificacao
+
+    });
+   
     
-    const newPaciente = { id: uuid(), name, cpf, altura, peso , imc, classificacao};
-    repositories.push({ newPaciente });
-    return response.json({ newPaciente });
+    return response.json({ retornoAluno });
 
 
 
@@ -83,7 +99,7 @@ app.put('/:id', (request, response) => {
     //route params guid
 
     const { id } = request.params;
-    const { name, cpf, altura, peso } = request.body;
+    const { nome, cpf, altura, peso } = request.body;
     const PacienteProcurado = repositories.findIndex(pacienteIndex => pacienteIndex.newPaciente.id == id);
 
 
@@ -98,7 +114,7 @@ app.put('/:id', (request, response) => {
 
     }
 
-    const newPaciente = { id, name, cpf, altura, peso };
+    const newPaciente = { id, nome, cpf, altura, peso };
     repositories[PacienteProcurado] = newPaciente;
     return response.json(newPaciente);
 

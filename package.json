@@ -6,6 +6,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "mongoose": "^5.12.0",
     "uuidv4": "^6.2.6"
   },
   "devDependencies": {
@@ -16,6 +17,5 @@
   "scripts": {
     "test": "jest",
     "start": "node ./src/index.js"
-
   }
 }
