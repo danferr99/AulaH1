@@ -6,7 +6,14 @@ const pacienteSchema = new mongoose.Schema({
     peso : Number,
     altura : Number,
     imc : Number,
-    classificacao : String
+    classificacao : String,
+    dataNascimento : Date,
+    cidade : String,
+    UF : String,
+    listaComorbidades : String,
+    JaTeveCovid : String
+
+
 
 });
 

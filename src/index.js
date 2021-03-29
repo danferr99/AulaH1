@@ -12,11 +12,15 @@ const PacienteRepositorio = require('./models/Paciente');
 const app = express();
 app.use(express.json());
 app.use(cors());
-
 const repositories = [];
 
+require('dotenv').config({
+    path: process.env.NODE_ENV === "test" ?
+        "./src/config/.env.testing"
+        : "./src/config/.env"
+});
 
-mongoose.connect('', {
+mongoose.connect(process.env.DB_CONNECTION, {
 useNewUrlParser : true,
 useUnifiedTopology : true
 
@@ -74,45 +78,47 @@ app.post('/', async (request, response) => {
 
     
     
-    const { nome, cpf, altura, peso } = request.body;
+    const { nome, cpf, altura, peso, dataNascimento, cidade, UF , listaComorbidades , JaTeveCovid } = request.body;
     console.log(request.body);
     //destruturação
     let imc = calculaImc(peso,altura);
     let classificacao = classificaIMC(imc);
     
-    console.log(imc);
-    console.log(classificacao);
+    
     const retornoPaciente = await PacienteRepositorio.create({
-        id: uuid(), nome, cpf, altura, peso , imc, classificacao
+        id: uuid(), nome, cpf, altura, peso , imc, classificacao, dataNascimento, cidade, UF , listaComorbidades , JaTeveCovid
 
     });
    
     
-    return response.json({ retornoAluno });
+    return response.json({ retornoPaciente });
 
 
 
 });
 
 
-app.put('/:id', (request, response) => {
+app.put('/:id', async (request, response) => {
     //route params guid
 
     const { id } = request.params;
-    const { nome, cpf, altura, peso } = request.body;
-    const PacienteProcurado = repositories.findIndex(pacienteIndex => pacienteIndex.newPaciente.id == id);
+    const { nome, cpf, altura, peso, dataNascimento, cidade, UF , listaComorbidades , JaTeveCovid } = request.body;
+    
 
-
-    console.log(id);
-    console.log(request.body);
-    console.log(PacienteProcurado);
-    console.log(repositories);
-
-    if (PacienteProcurado < 0) {
+    const PacienteRetorno = await PacienteRepositorio.find({cpf : id});
+    if (PacienteRetorno == null) {
 
         return response.status(404).json({ "ERROR": "Paciente não encontrado" });
 
     }
+
+    const PacienteAtualizado = await PacienteRepositorio.updateOne({ cpf: id },
+        {
+            $set:
+            {
+                 nome
+            }
+        });
 
     const newPaciente = { id, nome, cpf, altura, peso };
     repositories[PacienteProcurado] = newPaciente;
@@ -120,21 +126,18 @@ app.put('/:id', (request, response) => {
 
 });
 
-app.delete('/:id', (request, response) => {
-
+app.delete('/:id', async (request, response) => {
     const { id } = request.params;
-
-    const PacienteProcurado = repositories.findIndex(pacienteIndex => pacienteIndex.newPaciente.id == id);
-    if (PacienteProcurado < 0) {
-
-        return response.status(404).json({ "ERROR": `Paciente ${id} não encontrado` });
-
+    //id enviado existe no array?
+    
+    const PacienteRetorno = await PacienteRepositorio.find({ cpf: id });
+    console.log(PacienteRetorno);
+    if (PacienteRetorno == null) {
+        return response.status(404).json({ "error": "Paciente não encontrado" });
     }
+    const PacienteRemovido = await PacienteRepositorio.deleteOne({ cpf: id });
 
-    repositories.splice(PacienteProcurado, 1);
-    return response.json({ "Mensagem": `Paciente ${id} removido` });
-
-
+    return response.json({ "Message": `Paciente ${id} removido` });
 });
 
 
