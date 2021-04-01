@@ -47,7 +47,7 @@ routes.get('/paciente:cpf', async (request, response ) => {
             const pacienteAtualizar = {nome,cpf, nome, altura, peso, dataNascimento, cidade, UF , listaComorbidades , JaTeveCovid};
             const pacienteRetorno = await pacienteServico.atualizaPaciente(pacienteAtualizar);      
             if (!pacienteRetorno)
-        response.status(404).json({ "error": "Student não encontado!" });
+        return response.status(404).json({ "error": "Paciente não encontado!" });
 
     return response.status(200).json({ "ok": "Paciente Atualizado!" });    
                 
@@ -61,8 +61,9 @@ routes.get('/paciente:cpf', async (request, response ) => {
             const pacienteRetorno = await pacienteServico.removePaciente(cpf);
             if (!pacienteRetorno) 
                 return response.status(404).json({ "error": "Paciente não encontrado!!" });
+            
                 
-                return response.json({ "Message": `Paciente ${id} removido` });
+                return response.status(200).json({ "Message": `Paciente ${cpf} removido` });
         });
 
         module.exports = routes;

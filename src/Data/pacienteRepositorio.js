@@ -10,7 +10,7 @@ return  pacienteRepositorio.find();
 
 module.exports.buscaPacientePorCpf = async function(cpf){
 
-return await PacienteRepositorio.find({ cpf });
+return await pacienteRepositorio.find({ cpf });
 
 }
 
@@ -34,7 +34,7 @@ module.exports.atualizaPaciente = async function(atualizaPaciente){
 
     const {nome , cpf, altura, peso, imc , classificacao , dataNascimento, cidade, UF, listaComorbidades, JaTeveCovid} = atualizaPaciente;
     
-    const PacienteAtualizado = await PacienteRepositorio.updateOne(
+    const PacienteAtualizado = await pacienteRepositorio.updateOne(
         
         { cpf }, //filtro
         {// campos que vamos atualizar
