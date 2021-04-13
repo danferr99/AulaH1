@@ -8,10 +8,18 @@ module.exports.buscaPaciente = async function(){
 
 }
 
+module.exports.buscaPacientePorCpf = async function(cpf){
+
+
+  return pacienteRepositorio.buscaPacientePorCpf(cpf);
+
+
+
+}
 
 module.exports.inserePaciente = async function(novoPaciente){
 
-const pacienteRetorno = pacienteRepositorio.buscaPacientePorCpf(novoPaciente.cpf);
+const pacienteRetorno = pacienteRepositorio.buscaPaciente(novoPaciente.cpf);
   if (pacienteRetorno.length == 0) {
   
     return null;
@@ -63,4 +71,21 @@ const resultadoPaciente = await pacienteRepositorio.removePaciente(cpf);
 return true;
 
   }
+
+  module.exports.buscaPacientePorEmail = async function(email){
+
+return await pacienteRepositorio.buscaPacientePorEmail(email);
+
+  }
+
+  module.exports.verificaEmailSenha= async function(email , senha){
+
+    return await pacienteRepositorio.verificaEmailSenha(email, senha);
+    
+      }
+    
+
+
+
+
   

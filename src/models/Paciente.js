@@ -11,7 +11,9 @@ const pacienteSchema = new mongoose.Schema({
     cidade : String,
     UF : String,
     listaComorbidades : String,
-    JaTeveCovid : String
+    JaTeveCovid : String,
+    email : String,
+    senha : String
 
 
 

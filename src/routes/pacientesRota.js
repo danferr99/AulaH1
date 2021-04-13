@@ -1,34 +1,32 @@
 const { Router, request } = require('express');
 const pacienteServico = require('../services/pacienteServico');
-const routes = Router();
 
+const autenticacaoJWT = require('../services/authService');
 //preparar parar usar o express;
 
-routes.get('/paciente', async (request, response ) => {
-
+const routes = Router();
+//autenticacaoJWT.verificarToken
+routes.get('/', async (request, response) => {
     const pacienteRetorno = await pacienteServico.buscaPaciente();
     return response.json(pacienteRetorno);
-
-
 });
 
-routes.get('/paciente:cpf', async (request, response ) => {
-
-    const pacienteRetorno = await pacienteServico.buscaPaciente();
+routes.get('/:cpf', autenticacaoJWT.verificarToken, async (request, response) => {
+    const { cpf } = request.params;
+    const pacienteRetorno = await pacienteServico.buscaPacientePorCpf(cpf);
     return response.json(pacienteRetorno);
-
-
 });
 
-    routes.post('/paciente', async (request, response) => {
+
+    routes.post('/',  async (request, response) => {
 
     
     
-        const { nome, cpf, altura,  peso, imc , classificacao, dataNascimento, cidade, UF , listaComorbidades , JaTeveCovid } = request.body;
+        const { nome, cpf, altura,  peso, imc , classificacao, dataNascimento, cidade, UF , listaComorbidades , JaTeveCovid, email, senha } = request.body;
         console.log(request.body);
         //destruturação
         
-        const novoPaciente = { nome, cpf, altura, peso , imc, classificacao, dataNascimento, cidade, UF , listaComorbidades , JaTeveCovid};
+        const novoPaciente = { nome, cpf, altura, peso , imc, classificacao, dataNascimento, cidade, UF , listaComorbidades , JaTeveCovid, email, senha};
         const pacienteRetorno = await pacienteServico.inserePaciente(novoPaciente);
         if (pacienteRetorno === null){
 
@@ -39,12 +37,12 @@ routes.get('/paciente:cpf', async (request, response ) => {
         });
 
 
-        routes.put('/paciente/:cpf', async (request, response) => {
+        routes.put('/:cpf', async (request, response) => {
             //route params guid
         
             const { cpf} = request.params;
             const { nome, altura, peso, dataNascimento, cidade, UF , listaComorbidades , JaTeveCovid } = request.body;
-            const pacienteAtualizar = {nome,cpf, nome, altura, peso, dataNascimento, cidade, UF , listaComorbidades , JaTeveCovid};
+            const pacienteAtualizar = {nome,cpf, nome, altura, peso, dataNascimento, cidade, UF , listaComorbidades , JaTeveCovid, email, senha};
             const pacienteRetorno = await pacienteServico.atualizaPaciente(pacienteAtualizar);      
             if (!pacienteRetorno)
         return response.status(404).json({ "error": "Paciente não encontado!" });
@@ -54,10 +52,13 @@ routes.get('/paciente:cpf', async (request, response ) => {
                
         
         });
-
-        routes.delete('/paciente/:cpf', async (request, response) => {
+        
+       
+        
+        routes.delete('/:cpf', autenticacaoJWT.verificarToken, async (request, response) => {
+           
             const { cpf } = request.params;
-            
+           console.log(cpf); 
             const pacienteRetorno = await pacienteServico.removePaciente(cpf);
             if (!pacienteRetorno) 
                 return response.status(404).json({ "error": "Paciente não encontrado!!" });
