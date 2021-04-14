@@ -1,6 +1,5 @@
 const { Router, request } = require('express');
 const pacienteServico = require('../services/pacienteServico');
-
 const autenticacaoJWT = require('../services/authService');
 //preparar parar usar o express;
 

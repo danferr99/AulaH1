@@ -1,19 +1,18 @@
 const { Router, request } = require('express');
 const vacinaServico = require('../services/vacinaServico');
-
 const autenticacaoJWT = require('../services/authService');
 //preparar parar usar o express;
 
 const routes2 = Router();
 //autenticacaoJWT.verificarToken
 routes2.get('/', autenticacaoJWT.verificarToken, async (request, response) => {
-    const vacinaRetorno = await vacinaServico.buscaVacina();
+    const vacinaRetorno = await vacinaServico.buscaSolicitacoesVacina();
     return response.json(vacinaRetorno);
 });
 
 routes2.get('/:cpf', autenticacaoJWT.verificarToken, async (request, response) => {
     const { cpf } = request.params;
-    const vacinaRetorno = await vacinaServico.buscaPacientePorCpf(cpf);
+    const vacinaRetorno = await vacinaServico.buscaSolicitacaoPorCpf(cpf);
     return response.json(vacinaRetorno);
 });
 
@@ -26,8 +25,8 @@ routes2.get('/:cpf', autenticacaoJWT.verificarToken, async (request, response) =
         console.log(request.body);
         
         
-        const novaVacina = {  nome, dataSolicitacao, dataPrevista, nroDose, flTomou, dataVacinacao, cpf};
-        const vacinaRetorno = await vacinaServico.insereVacina(novaVacina);
+        const novaVacinacao = {  nome, dataSolicitacao, dataPrevista, nroDose, flTomou, dataVacinacao, cpf};
+        const vacinaRetorno = await vacinaServico.inserePacienteParaVacina(novaVacinacao);
         if (vacinaRetorno === null){
 
             response.status(500).json({ "ERROR": "Pessoa já está na fila. Paciente não foi inserido!!" });
@@ -42,8 +41,8 @@ routes2.get('/:cpf', autenticacaoJWT.verificarToken, async (request, response) =
         
             const { cpf} = request.params;
             const { nome, dataSolicitacao, dataPrevista, nroDose, flTomou, dataVacinacao} = request.body;
-            const vacinaAtualizar = {nome, dataSolicitacao, dataPrevista, nroDose, flTomou, dataVacinacao, cpf};
-            const vacinaRetorno = await vacinaServico.atualizaVacina(vacinaAtualizar);      
+            const vacinacaoAtualizar = {nome, dataSolicitacao, dataPrevista, nroDose, flTomou, dataVacinacao, cpf};
+            const vacinaRetorno = await vacinaServico.atualizaVacinacao(vacinacaoAtualizar);      
             if (!vacinaRetorno)
         return response.status(404).json({ "error": "Paciente não encontado!" });
 
@@ -59,9 +58,9 @@ routes2.get('/:cpf', autenticacaoJWT.verificarToken, async (request, response) =
            
             const { cpf } = request.params;
            console.log(cpf); 
-            const vacinaRetorno = await vacinaServico.removeVacina(cpf);
+            const vacinaRetorno = await vacinaServico.removeVacinacao(cpf);
             if (!vacinaRetorno) 
-             response.status(404).json({ "error": "Paciente não encontrado!!" });
+            return response.status(404).json({ "error": "Paciente não encontrado!!" });
         
                 
                 return response.status(200).json({ "Message": `Pessoa ${cpf} removida da fila de Vacinação!!!` });

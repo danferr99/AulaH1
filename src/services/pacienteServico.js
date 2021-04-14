@@ -11,7 +11,7 @@ module.exports.buscaPaciente = async function(){
 module.exports.buscaPacientePorCpf = async function(cpf){
 
 
-  return pacienteRepositorio.buscaPacientePorCpf(cpf);
+  return await pacienteRepositorio.buscaPacientePorCpf(cpf);
 
 
 

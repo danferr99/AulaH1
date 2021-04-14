@@ -1,47 +1,47 @@
 const vacinaRepositorio = require('../Data/vacinaRepositorio');
 
-module.exports.buscaVacina = async function(){
+module.exports.buscaSolicitacoesVacina = async function(){
 
-  return vacinaRepositorio.buscaVacina();
-
-
-
-}
-
-module.exports.buscaPacientePorCpf = async function(cpf){
-
-
-  return vacinaRepositorio.buscaPacientePorCpf(cpf);
+  return vacinaRepositorio.buscaSolicitacoesVacina();
 
 
 
 }
 
-module.exports.insereVacina = async function(novaVacina){
+module.exports.buscaSolicitacaoPorCpf =  function (cpf){
 
-const vacinaRetorno = vacinaRepositorio.buscaVacina(novaVacina.cpf);
+
+  return vacinaRepositorio.buscaSolicitacaoPorCpf(cpf);
+
+
+
+}
+
+module.exports.inserePacienteParaVacina = async function (novaVacinacao){
+
+const vacinaRetorno = vacinaRepositorio.buscaSolicitacaoPorCpf(novaVacinacao.cpf);
   if (vacinaRetorno.length == 0) {
   
     return null;
 
   }
   
-  return vacinaRepositorio.insereVacina(novaVacina);
+  return vacinaRepositorio.inserePacienteParaVacina(novaVacinacao);
   
   
   
   }
 
-  module.exports.atualizaVacina = async function(atualizaVacina){
+  module.exports.atualizaVacinacao = async function (atualizaVacinacao){
 
-const vacinaRetorno = await vacinaRepositorio.buscaPacientePorCpf(atualizaVacina.cpf);
+const vacinaRetorno = await vacinaRepositorio.buscaSolicitacaoPorCpf(atualizaVacinacao.cpf);
 if (vacinaRetorno.length == 0){
 
   return false;
 
 }
 
-const resultadoVacina = await vacinaRepositorio.atualizaVacina(atualizaVacina);
+const resultadoVacina = await vacinaRepositorio.atualizaVacinacao(atualizaVacinacao);
 
       return true;
 }
@@ -49,18 +49,25 @@ const resultadoVacina = await vacinaRepositorio.atualizaVacina(atualizaVacina);
 
 
 
-  module.exports.removeVacina =  async function(cpf){
+  module.exports.removeVacinacao =  async function (cpf){
 
-const vacinaRetorno = await vacinaRepositorio.buscaPacientePorCpf(cpf);
+const vacinaRetorno = await vacinaRepositorio.buscaSolicitacaoPorCpf(cpf);
 if (vacinaRetorno.length == 0){
 
   return false;
 
 }
   
-const resultadoVacina = await vacinaRepositorio.removeVacina(cpf);
+const resultadoVacina = await vacinaRepositorio.removeVacinacao(cpf);
 
 return true;
 
   }
   
+  module.exports.verificaEmailSenha = function (email, senha) {
+    return vacinaRepositorio.verificaEmailSenha(email, senha);
+}
+
+module.exports.buscaAlunoPorEmail = function (email) {
+    return vacinaRepositorio.buscaAlunoPorEmail(email);
+}
