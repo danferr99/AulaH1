@@ -1,6 +1,8 @@
 const { Router, request } = require('express');
 const vacinaServico = require('../services/vacinaServico');
 const autenticacaoJWT = require('../services/authService');
+const { validate } = require('../validations/validations');
+const { VacinaValidationRules } = require('../validations/vacinaValidations');
 //preparar parar usar o express;
 
 const routes2 = Router();
@@ -17,7 +19,7 @@ routes2.get('/:cpf', autenticacaoJWT.verificarToken, async (request, response) =
 });
 
 
-    routes2.post('/', autenticacaoJWT.verificarToken, async (request, response) => {
+    routes2.post('/', VacinaValidationRules() ,  validate, async (request, response) => {
 
     
     

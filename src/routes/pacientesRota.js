@@ -1,6 +1,8 @@
 const { Router, request } = require('express');
 const pacienteServico = require('../services/pacienteServico');
 const autenticacaoJWT = require('../services/authService');
+const { validate } = require('../validations/validations');
+const { PacienteValidationRules } = require('../validations/pacienteValidations');
 //preparar parar usar o express;
 
 const routes = Router();
@@ -17,7 +19,7 @@ routes.get('/:cpf', autenticacaoJWT.verificarToken, async (request, response) =>
 });
 
 
-    routes.post('/',  async (request, response) => {
+    routes.post('/', PacienteValidationRules(), validate , async (request, response) => {
 
     
     
