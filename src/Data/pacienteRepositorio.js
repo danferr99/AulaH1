@@ -10,7 +10,7 @@ return  pacienteRepositorio.find();
 
 module.exports.buscaPacientePorCpf = async function (cpf){
 
-return await pacienteRepositorio.find({ cpf });
+return await pacienteRepositorio.findOne({ cpf });
 
 }
 
